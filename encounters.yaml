@@ -1,0 +1,21 @@
+level 1:
+  - acolyte: 1d8
+  - bandit: 1d8
+  - fire beetle: 1d8
+  - dwarf: 1d6
+  - gnome: 1d8
+  - goblin: 2d4
+  - green slime: 1
+  - halfling: 3d6
+  - killer bee: 1d10
+  - kobold: 4d4
+  - gecko lizard: 1d3
+  - orc: 2d4
+  - giant shrew: 1d10
+  - skeleton: 3d4
+  - cobra snake: 1d6
+  - crab spider: 1d4
+  - sprite: 2d6
+  - stirge: 1d10
+  - trader: 1d8
+  - wolf: 2d6
