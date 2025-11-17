@@ -6,11 +6,29 @@ import yaml
 with open('encounters.yaml','r') as f:
     encounter_table = yaml.safe_load(f)
 
+# torches, spells, so on
+class Trackable():
+    def __init__(self,kind):
+        # kinds should be one of torch, latern, spell
+        self.kind = kind
+        self.total_turns = self.set_turns()
+
+    def set_turns(self):
+        turn_lifespan = {
+            "torch" : 6,
+            "spell" : 3, # place holder
+            "latern" : 24
+        }
+        return turn_lifespan[self.kind]
+        
+
+# umbrella to hold all the objects and time passed
 class Session():
     def __init__(self):
         self.time_passed = "0m"
         self.turns = 1
         self.rolls = []
+        self.tracked_objects = []
 
     def update_time(self):
         # time not counting the current turn
@@ -30,7 +48,8 @@ class Session():
             result = dice_roller(count,sides)
             self.rolls.append(result)
 
-class ui():
+# Terminal User Interface
+class UserInterface():
     def __init__(self):
         self.heading = "Old School Turn Tracker"
         self.keys = {
@@ -91,11 +110,11 @@ def dice_roller(dieCount,dieSides):
 
 def main():
     new_game = Session()
-    game_ui = ui()
+    ui = UserInterface()
     while True:
         new_game.update_time()
-        game_ui.main_screen(new_game)
-        key = game_ui.user_input()
+        ui.main_screen(new_game)
+        key = ui.user_input()
         if key == 't':
             new_game.turns += 1
         if key == 'd':
@@ -113,7 +132,7 @@ def main():
             dice = dice_roller(int(dice.split('d')[0]), int(dice.split('d')[1]))
             input(f"{dice}, {monster}")
         if key == 'q':
-            q = input('Are you sure you want to quit?')
+            q = input('Are you sure you want to quit? ')
             if q.lower() in ['y', 'ye', 'yes', 'ya', 'yup', 'yeah']:
                 quit()
 
