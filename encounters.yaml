@@ -5,7 +5,7 @@ level 1:
   - dwarf: 1d6
   - gnome: 1d8
   - goblin: 2d4
-  - green slime: 1
+  - green slime: 1d1
   - halfling: 3d6
   - killer bee: 1d10
   - kobold: 4d4

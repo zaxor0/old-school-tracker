@@ -79,7 +79,10 @@ def main():
             selection = int(input("Which table to roll on? ")) - 1
             selected_table = tables[selection]
             encounter = random.choice(encounter_table[selected_table])
-            input(print(encounter))
+            monster = list(encounter.keys())[0]
+            dice = encounter[monster]
+            dice = diceRoll(int(dice.split('d')[0]), int(dice.split('d')[1]))
+            input(f"{dice}, {monster}")
         if key == 'q':
             q = input('Are you sure you want to quit?')
             if q.lower() in ['y', 'ye', 'yes', 'ya', 'yup', 'yeah']:
