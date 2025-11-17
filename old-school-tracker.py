@@ -101,11 +101,11 @@ class UserInterface():
         torch = '[' + (turns_passed * '.') + (turns_left * '|') +']'
         return 'Torchlight:  ' + torch
 
-def dice_roller(dieCount,dieSides):
-    result = -1
-    for i in range(dieCount):
-        roll = random.randint(0,dieSides)
-        result += roll
+def dice_roller(count,sides):
+    result = sum(random.randint(1,sides) for _ in range(count))
+#    for i in range(dieCount):
+#        roll = random.randint(1,dieSides)
+#        result += roll
     return(result)
 
 def main():
