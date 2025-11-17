@@ -11,16 +11,21 @@ class Trackable():
     def __init__(self,kind):
         # kinds should be one of torch, latern, spell
         self.kind = kind
+        self.turns_passed = -1 # need to fix this so that turns dont increment when torches are lit
         self.total_turns = self.set_turns()
 
     def set_turns(self):
         turn_lifespan = {
             "torch" : 6,
             "spell" : 3, # place holder
-            "latern" : 24
+            "lantern" : 24
         }
         return turn_lifespan[self.kind]
-        
+
+    def print_meter(self):
+        turns_left = self.total_turns - (self.turns_passed)
+        meter = '[' + (self.turns_passed * '.') + (turns_left * '|') +']'
+        return f"{self.kind}: {meter}"
 
 # umbrella to hold all the objects and time passed
 class Session():
@@ -39,6 +44,8 @@ class Session():
             self.time_passed = f"{minutes}m"
         else:
             self.time_passed = f"{hours}h {minutes}m"
+        for to in self.tracked_objects:
+            to.turns_passed += 1
 
     def roll_dice(self):
         dice = input('What would you like to roll, in 1d6 format? ')
@@ -66,8 +73,9 @@ class UserInterface():
         print(title_box)
         print(f"Time passed:  {new_game.time_passed}")
         print(f"Current turn: {new_game.turns}")
-        print(self.torch_ascii(new_game.turns))
-
+        if new_game.tracked_objects:
+            for to in new_game.tracked_objects:
+                print(to.print_meter())
         print(f"Rolls made: {new_game.rolls}")
         if new_game.rolls:
             print(f"Last roll: {new_game.rolls[-1]}")
@@ -95,11 +103,6 @@ class UserInterface():
         box = line + '\n' + '| ' + text + ' |\n' + line
         return box
 
-    def torch_ascii(self, t):
-        turns_passed = (t - 1) % 6
-        turns_left = 6 - turns_passed
-        torch = '[' + (turns_passed * '.') + (turns_left * '|') +']'
-        return 'Torchlight:  ' + torch
 
 def dice_roller(count,sides):
     result = sum(random.randint(1,sides) for _ in range(count))
@@ -119,6 +122,9 @@ def main():
             new_game.turns += 1
         if key == 'd':
             new_game.roll_dice()
+        if key == 'n':
+            torch = Trackable("torch")
+            new_game.tracked_objects.append(torch)
         if key == 'e':
             print("Encounter Tables:")
             tables = list(encounter_table.keys())
