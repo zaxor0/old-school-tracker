@@ -8,20 +8,22 @@ with open('encounters.yaml','r') as f:
 
 # torches, spells, so on
 class Trackable():
-    def __init__(self,kind):
+    def __init__(self, kind, name=None, turns=None):
         # kinds should be one of torch, latern, spell
         self.active = True
         self.kind = kind
+        self.name = name
         self.turns_passed = -1 # need to fix this so that turns dont increment when torches are lit
-        self.total_turns = self.set_turns()
+        self.total_turns = self.set_turns(turns)
 
-    def set_turns(self):
-        turn_lifespan = {
-            "torch" : 6,
-            "spell" : 3, # place holder
-            "lantern" : 24
-        }
-        return turn_lifespan[self.kind]
+    def set_turns(self,turns):
+        if self.kind == "torch":
+            turn_lifespan = 6
+        if self.kind == "lantern":
+            turn_lifespan = 24
+        if self.kind == "spell":
+            turn_lifespan = turns
+        return turn_lifespan
 
     def update_turns(self):
         passed = self.turns_passed + 1
@@ -35,7 +37,10 @@ class Trackable():
             passed = self.turns_passed + 1
             turns_left = self.total_turns - passed
             meter = '[' + (passed * '.') + (turns_left * '|') +']'
-            print(f"{self.kind}: {meter} \t {turns_left} of {self.total_turns} remaining")
+            if self.kind == "spell":
+                print(f"{self.name.title()}: {meter} \t {turns_left} of {self.total_turns} remaining")
+            else:
+                print(f"{self.kind}: {meter} \t {turns_left} of {self.total_turns} remaining")
 
 # umbrella to hold all the objects and time passed
 class Session():
@@ -92,10 +97,16 @@ class UserInterface():
         print(title_box)
         print(f"Time passed:  {new_game.time_passed}")
         print(f"Current turn: {new_game.turns}")
-        print(f"Spent Torches: {new_game.spent_torches()}")
+        print(f"\nSpent Torches: {new_game.spent_torches()}")
         if new_game.tracked_objects:
             for to in new_game.tracked_objects:
-                to.print_meter()
+                if to.kind != "spell":
+                    to.print_meter()
+        print(f"\nActive Spells:")
+        if new_game.tracked_objects:
+            for to in new_game.tracked_objects:
+                if to.kind == "spell":
+                    to.print_meter()
         print(f"\nEncounters: {new_game.encounters}")
         print(f"\nRolls made: {new_game.rolls}")
         if new_game.rolls:
@@ -105,7 +116,7 @@ class UserInterface():
         print()
         user_keys = ""
         for s in self.keys.values():
-            user_keys = user_keys + s + "\t"
+            user_keys = user_keys + s + "  "
         print(user_keys)
 
     def user_input(self):
@@ -152,6 +163,11 @@ def main():
                     kind = 'torch'
                 light_source= Trackable(kind)
                 new_game.tracked_objects.append(light_source)
+        if key == 's':
+            spell_name = input("What spell has been cast? ")
+            turns = int(input("How many turns will it last? "))
+            spell = Trackable("spell",spell_name,turns)
+            new_game.tracked_objects.append(spell)
         if key == 'e':
             print("Encounter Tables:")
             tables = list(encounter_table.keys())
@@ -163,7 +179,9 @@ def main():
             monster = list(encounter.keys())[0]
             dice = encounter[monster]
             dice = dice_roller(int(dice.split('d')[0]), int(dice.split('d')[1]))
-            new_game.encounters.append(f"{dice} {monster}")
+            if dice > 1:
+                monster += 's'
+            new_game.encounters.append(f"{dice} {monster.title()}")
         if key == 'q':
             q = input('Are you sure you want to quit? ')
             if q.lower() in ['y', 'ye', 'yes', 'ya', 'yup', 'yeah']:

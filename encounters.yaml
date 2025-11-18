@@ -19,3 +19,25 @@ level 1:
   - stirge: 1d10
   - trader: 1d8
   - wolf: 2d6
+
+level 2:
+  - oil beetle: 1d8
+  - berserker: 1d6
+  - mountain lion: 1d4
+  - elf: 1d4
+  - ghoul: 1d6
+  - gnoll: 1d6
+  - gray ooze: 1d1
+  - hobgoblin: 1d6
+  - draco lizard: 1d4
+  - lizard man: 1d3
+  - neanderthal: 1d10
+  - noble: 2d6
+  - pixie: 2d8
+  - robber fly: 1d6
+  - rock baboon: 2d6
+  - pit viper snake: 1d8
+  - black widow spider: 1d3
+  - troglodyte: 1d8
+  - veteran: 2d4
+  - zombie: 2d4
