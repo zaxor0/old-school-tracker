@@ -1,0 +1,36 @@
+- encounters: []
+  rolls: []
+  time_passed: 40m
+  tracked_objects:
+  - kind: torch
+    name: null
+    total_turns: 6
+    turns_passed: 0
+  turns: 5
+- encounters: []
+  rolls: []
+  time_passed: 50m
+  tracked_objects:
+  - kind: torch
+    name: null
+    total_turns: 6
+    turns_passed: 1
+  turns: 6
+- encounters: []
+  rolls: []
+  time_passed: 1h 0m
+  tracked_objects:
+  - kind: torch
+    name: null
+    total_turns: 6
+    turns_passed: 2
+  turns: 7
+- encounters: []
+  rolls: []
+  time_passed: 1h 0m
+  tracked_objects:
+  - kind: torch
+    name: null
+    total_turns: 6
+    turns_passed: 2
+  turns: 7

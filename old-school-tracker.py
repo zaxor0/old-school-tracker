@@ -8,13 +8,17 @@ with open('encounters.yaml','r') as f:
 
 # torches, spells, so on
 class Trackable():
-    def __init__(self, kind, name=None, turns=None):
+    def __init__(self, kind, name=None, total_turns=None, turns_passed=-1):
         # kinds should be one of torch, latern, spell
         self.active = True
         self.kind = kind
         self.name = name
-        self.turns_passed = -1 # need to fix this so that turns dont increment when torches are lit
-        self.total_turns = self.set_turns(turns)
+        # need to fix this so that turns dont increment when torches are lit
+        self.turns_passed = turns_passed
+        if not total_turns:
+            self.total_turns = self.set_turns(total_turns)
+        else:
+            self.total_turns = total_turns
 
     def set_turns(self,turns):
         if self.kind == "torch":
@@ -44,12 +48,27 @@ class Trackable():
 
 # umbrella to hold all the objects and time passed
 class Session():
-    def __init__(self):
-        self.time_passed = "0m"
-        self.turns = 1
-        self.rolls = []
-        self.encounters = []
-        self.tracked_objects = []
+    save_directory = "saves/"
+    historical_data = []
+    def __init__(self, turns=1, time_passed='0m', rolls=None, encounters=None, tracked_objects=None, progress=None):
+        self.turns = turns
+        self.time_passed = time_passed
+        if not rolls:
+            self.rolls = []
+        else:
+            self.rolls = rolls
+        if not encounters:
+            self.encounters = []
+        else:
+            self.encounters = encounters
+        if not tracked_objects:
+            self.tracked_objects = []
+        else:
+            self.tracked_objects = tracked_objects
+        if not progress:
+            self.progress = []
+        else:
+            self.progress = progress
 
     def update_time(self):
         # time not counting the current turn
@@ -77,6 +96,59 @@ class Session():
             sides = int(dice.split('d')[1])
             result = dice_roller(count,sides)
             self.rolls.append(result)
+
+    @classmethod
+    def start_session(cls):
+        print("Welcome to the Old School Tracker\n") 
+        print("Available save files:")
+        if os.listdir(Session.save_directory): 
+            for num, sf in enumerate(os.listdir(Session.save_directory)): 
+               print(f"  {num+1}. {sf}")
+        else:
+            print("...")
+        option = input("\nPress [n] to start a new session, or [l] to load a save file: ")
+        if option in ['n', 'l']:
+            if option == 'n':
+                return cls(0,"0m")
+            if option == 'l':
+                save_select = int(input("Which save file? Enter a number: ")) - 1
+                save_file = os.listdir(Session.save_directory)[save_select]
+                save_file = os.path.join(Session.save_directory, save_file)
+                with open(save_file, 'r') as file:
+                    saved_session = yaml.safe_load(file)
+                last_session = saved_session[-1]
+                trackables = []
+                for t in last_session['tracked_objects']:
+                    new_tracked = Trackable(t['kind'], t['name'], t['total_turns'], t['turns_passed'])
+                    trackables.append(new_tracked)
+                return cls(last_session['turns'], last_session['time_passed'], last_session['rolls'], last_session['encounters'], trackables)
+
+    def save_progress(self):
+        progress_data = {
+            "turns" : self.turns,
+            "time_passed" : self.time_passed,
+            "rolls" : list(self.rolls),
+            "encounters" : list(self.encounters)
+            }
+        session_trackables = []
+        for to in self.tracked_objects:
+            if to.active:
+                thing = { 
+                    "kind" : to.kind, 
+                    "name" : to.name, 
+                    "turns_passed" : to.turns_passed, 
+                    "total_turns" : to.total_turns 
+                    }
+                session_trackables.append(thing)
+        progress_data["tracked_objects"] = session_trackables
+        # update self object
+        self.historical_data.append(progress_data)
+        # save to file
+        with open("saves/saved.yaml", 'w') as file:
+            file.write(yaml.dump(self.historical_data))
+
+    def load_progress(self):
+        ...
 
 # Terminal User Interface
 class UserInterface():
@@ -138,13 +210,10 @@ class UserInterface():
 
 def dice_roller(count,sides):
     result = sum(random.randint(1,sides) for _ in range(count))
-#    for i in range(dieCount):
-#        roll = random.randint(1,dieSides)
-#        result += roll
     return(result)
 
 def main():
-    new_game = Session()
+    new_game = Session.start_session()
     ui = UserInterface()
     while True:
         ui.main_screen(new_game)
@@ -182,6 +251,9 @@ def main():
             if dice > 1:
                 monster += 's'
             new_game.encounters.append(f"{dice} {monster.title()}")
+        # SAVE
+        new_game.save_progress()
+        # quit
         if key == 'q':
             q = input('Are you sure you want to quit? ')
             if q.lower() in ['y', 'ye', 'yes', 'ya', 'yup', 'yeah']:
