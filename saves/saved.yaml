@@ -1,36 +1,17 @@
-- encounters: []
-  rolls: []
-  time_passed: 40m
+- encounters:
+  - 1 Fire Beetle
+  - 7 Bandits
+  rolls:
+  - 1
+  - 20
+  time_passed: 1h 10m
   tracked_objects:
-  - kind: torch
+  - kind: lantern
     name: null
-    total_turns: 6
+    total_turns: 24
+    turns_passed: 4
+  - kind: spell
+    name: sleep
+    total_turns: 10
     turns_passed: 0
-  turns: 5
-- encounters: []
-  rolls: []
-  time_passed: 50m
-  tracked_objects:
-  - kind: torch
-    name: null
-    total_turns: 6
-    turns_passed: 1
-  turns: 6
-- encounters: []
-  rolls: []
-  time_passed: 1h 0m
-  tracked_objects:
-  - kind: torch
-    name: null
-    total_turns: 6
-    turns_passed: 2
-  turns: 7
-- encounters: []
-  rolls: []
-  time_passed: 1h 0m
-  tracked_objects:
-  - kind: torch
-    name: null
-    total_turns: 6
-    turns_passed: 2
-  turns: 7
+  turns: 8
