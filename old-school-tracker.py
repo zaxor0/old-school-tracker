@@ -58,8 +58,7 @@ class Trackable():
 # umbrella to hold all the objects and time passed
 class Session():
     save_directory = "saves/"
-    def __init__(self, turns=1, time_passed='0m', rolls=None, encounters=None, tracked_objects=None, progress=None):
-        self.messages = [ "Welcome to your new session" ]
+    def __init__(self, turns=1, time_passed='0m', rolls=None, encounters=None, tracked_objects=None, progress=None, messages=None):
         self.turns = turns
         self.time_passed = time_passed
         # pythonic way to assign empty array if value is None
@@ -67,6 +66,7 @@ class Session():
         self.encounters = [] if not encounters else encounters
         self.tracked_objects = [] if not tracked_objects else tracked_objects
         self.progress = [] if not progress else progress
+        self.messages = [ "Welcome to your new session" ] if not messages else messages 
         self.redo = {}
 
     def update_time(self):
@@ -92,6 +92,7 @@ class Session():
                 kind = 'torch'
             light_source= Trackable(kind)
             self.tracked_objects.append(light_source)
+            self.messages.append(f"You lit a {kind}.")
 
     def encounter_check(self):
         print("Encounter Tables:")
@@ -106,13 +107,16 @@ class Session():
         dice = self.roll_dice(int(dice.split('d')[0]), int(dice.split('d')[1]))
         if dice > 1:
             monster += 's'
-        self.encounters.append(f"{dice} {monster.title()}")
+        encounter_text = f"{dice} {monster.title()}"
+        self.encounters.append(encounter_text)
+        self.messages.append(f"Encounter with {encounter_text}!")
 
     def cast_spell(self):
         spell_name = input("What spell has been cast? ")
         turns = int(input("How many turns will it last? "))
         spell = Trackable("spell",spell_name,turns)
         self.tracked_objects.append(spell)
+        self.messages.append(f"The spell {spell_name} was cast!")
 
     def spent_torches(self):
         st = 0
@@ -131,6 +135,7 @@ class Session():
             sides = int(dice.split('d')[1])
             result = self.roll_dice(count, sides)
             self.rolls.append(result)
+        self.messages.append(f"{dice} dice were rolled with a result of {result}.")
 
     def undo_turn(self):
         self.redo = self.progress.pop()
@@ -167,19 +172,12 @@ class Session():
                 save_file = os.path.join(Session.save_directory, save_file)
                 with open(save_file, 'r') as file:
                     saved_session = yaml.safe_load(file)
-                last_session = saved_session[-1]
+                last_sess = saved_session[-1]
                 trackables = []
-                for t in last_session['tracked_objects']:
+                for t in last_sess['tracked_objects']:
                     new_tracked = Trackable(t['kind'], t['name'], t['total_turns'], t['turns_passed'])
                     trackables.append(new_tracked)
-                return cls(
-                    last_session['turns'], 
-                    last_session['time_passed'], 
-                    last_session['rolls'], 
-                    last_session['encounters'], 
-                    trackables, 
-                    saved_session
-                    )
+                return cls(last_sess['turns'], last_sess['time_passed'], last_sess['rolls'], last_sess['encounters'], trackables, saved_session)
             
     def save_progress(self):
         turn_data = {
@@ -228,11 +226,7 @@ class UserInterface():
                     to.print_meter()
         print(f"\nEncounters: {session.encounters}")
         print(f"\nRolls made: {session.rolls}")
-        if session.rolls:
-            print(f"Last roll: {session.rolls[-1]}")
-        else:
-            print()
-        print(f"Log:\n  {session.messages[-1]}\n")
+        print(f"\nLog:\n  {session.messages[-1]}\n")
 
     def user_input(self, session):
         user_keys = {
@@ -264,7 +258,7 @@ class UserInterface():
             clear = 'cls'
         os.system(clear)
 
-    # I got this from here, https://gist.github.com/jfktrey/8928865, but i need to test it on a windows machine
+    # I got this from here, https://gist.github.com/jfktrey/8928865, but I need to test it on a windows machine
     def getch(self):
         if os.name == 'nt':
             return msvcrt.getch()
