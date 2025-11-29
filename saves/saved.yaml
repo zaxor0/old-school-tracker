@@ -1,17 +1,80 @@
+- encounters: []
+  rolls: []
+  time_passed: 0m
+  tracked_objects: []
+  turns: 1
+- encounters: []
+  rolls: []
+  time_passed: 10m
+  tracked_objects: []
+  turns: 2
+- encounters: []
+  rolls: []
+  time_passed: 20m
+  tracked_objects: []
+  turns: 3
+- encounters: []
+  rolls: []
+  time_passed: 30m
+  tracked_objects: []
+  turns: 4
+- encounters: []
+  rolls: []
+  time_passed: 40m
+  tracked_objects: []
+  turns: 5
+- encounters: []
+  rolls: []
+  time_passed: 40m
+  tracked_objects: []
+  turns: 5
 - encounters:
-  - 1 Fire Beetle
-  - 7 Bandits
-  rolls:
-  - 1
-  - 20
+  - 7 Sprites
+  rolls: []
+  time_passed: 50m
+  tracked_objects: []
+  turns: 6
+- encounters:
+  - 7 Sprites
+  rolls: []
+  time_passed: 1h 0m
+  tracked_objects: []
+  turns: 7
+- encounters:
+  - 7 Sprites
+  rolls: []
   time_passed: 1h 10m
-  tracked_objects:
-  - kind: lantern
-    name: null
-    total_turns: 24
-    turns_passed: 4
-  - kind: spell
-    name: sleep
-    total_turns: 10
-    turns_passed: 0
+  tracked_objects: []
   turns: 8
+- encounters:
+  - 7 Sprites
+  rolls: []
+  time_passed: 1h 20m
+  tracked_objects: []
+  turns: 9
+- encounters:
+  - 7 Sprites
+  rolls: []
+  time_passed: 1h 30m
+  tracked_objects: []
+  turns: 10
+- encounters:
+  - 7 Sprites
+  rolls: []
+  time_passed: 1h 30m
+  tracked_objects: []
+  turns: 10
+- encounters:
+  - 7 Sprites
+  rolls:
+  - 14
+  time_passed: 1h 30m
+  tracked_objects: []
+  turns: 10
+- encounters:
+  - 7 Sprites
+  rolls:
+  - 14
+  time_passed: 1h 30m
+  tracked_objects: []
+  turns: 10

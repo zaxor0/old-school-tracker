@@ -2,7 +2,13 @@
 import os
 import random
 import yaml
+# import specific module based on OS
+if os.name == 'nt':
+    import msvcrt
+else:
+    import tty, termios, sys
 
+# load encounter tables file
 with open('encounters.yaml','r') as f:
     encounter_table = yaml.safe_load(f)
 
@@ -46,31 +52,25 @@ class Trackable():
             else:
                 print(f"{self.kind}: {meter} \t {turns_left} of {self.total_turns} remaining")
 
+    def return_dict(self):
+        return { "kind" : self.kind, "name" : self.name, "turns_passed" : self.turns_passed, "total_turns" : self.total_turns }
+
 # umbrella to hold all the objects and time passed
 class Session():
     save_directory = "saves/"
-    historical_data = []
     def __init__(self, turns=1, time_passed='0m', rolls=None, encounters=None, tracked_objects=None, progress=None):
+        self.messages = [ "Welcome to your new session" ]
         self.turns = turns
         self.time_passed = time_passed
-        if not rolls:
-            self.rolls = []
-        else:
-            self.rolls = rolls
-        if not encounters:
-            self.encounters = []
-        else:
-            self.encounters = encounters
-        if not tracked_objects:
-            self.tracked_objects = []
-        else:
-            self.tracked_objects = tracked_objects
-        if not progress:
-            self.progress = []
-        else:
-            self.progress = progress
+        # pythonic way to assign empty array if value is None
+        self.rolls = [] if not rolls else rolls 
+        self.encounters = [] if not encounters else encounters
+        self.tracked_objects = [] if not tracked_objects else tracked_objects
+        self.progress = [] if not progress else progress
+        self.redo = {}
 
     def update_time(self):
+        self.turns += 1
         # time not counting the current turn
         t = self.turns - 1
         hours = (t * 10) // 60
@@ -79,8 +79,40 @@ class Session():
             self.time_passed = f"{minutes}m"
         else:
             self.time_passed = f"{hours}h {minutes}m"
+        # update objects turn counters
         for to in self.tracked_objects:
             to.update_turns()
+    
+    def new_light_source(self):
+        kind = input("Are you lighting a [t]orch or a [l]antern? ")
+        if kind in ['t','l']:
+            if kind == 'l':
+                kind = 'lantern'
+            if kind == 't':
+                kind = 'torch'
+            light_source= Trackable(kind)
+            self.tracked_objects.append(light_source)
+
+    def encounter_check(self):
+        print("Encounter Tables:")
+        tables = list(encounter_table.keys())
+        for n,table in enumerate(encounter_table):
+            print(f"  {n+1}. {table}")
+        selection = int(input("Which table to roll on? ")) - 1
+        selected_table = tables[selection]
+        encounter = random.choice(encounter_table[selected_table])
+        monster = list(encounter.keys())[0]
+        dice = encounter[monster]
+        dice = self.roll_dice(int(dice.split('d')[0]), int(dice.split('d')[1]))
+        if dice > 1:
+            monster += 's'
+        self.encounters.append(f"{dice} {monster.title()}")
+
+    def cast_spell(self):
+        spell_name = input("What spell has been cast? ")
+        turns = int(input("How many turns will it last? "))
+        spell = Trackable("spell",spell_name,turns)
+        self.tracked_objects.append(spell)
 
     def spent_torches(self):
         st = 0
@@ -89,13 +121,32 @@ class Session():
                 st += 1
         return st
 
-    def roll_dice(self):
+    def roll_dice(self, count, sides):
+        return sum(random.randint(1,sides) for _ in range(count))
+
+    def user_roll_dice(self):
         dice = input('What would you like to roll, in 1d6 format? ')
         if 'd' in dice:
             count = int(dice.split('d')[0])
             sides = int(dice.split('d')[1])
-            result = dice_roller(count,sides)
+            result = self.roll_dice(count, sides)
             self.rolls.append(result)
+
+    def undo_turn(self):
+        self.redo = self.progress.pop()
+        last_turn = self.progress[-1]
+        self.load_turn_dict(last_turn)
+        self.messages.append(f"You just undid your last turn, you can redo that turn by pressing [r]")
+
+    def load_turn_dict(self, new_turn):
+        self.turns = new_turn['turns'] 
+        self.time_passed = new_turn['time_passed'] 
+        self.rolls = new_turn['rolls']
+        self.encounters = new_turn['encounters']
+        self.tracked_objects = []
+        for t in new_turn['tracked_objects']:
+            new_tracked = Trackable(t['kind'], t['name'], t['total_turns'], t['turns_passed'])
+            self.tracked_objects.append(new_tracked)
 
     @classmethod
     def start_session(cls):
@@ -121,79 +172,91 @@ class Session():
                 for t in last_session['tracked_objects']:
                     new_tracked = Trackable(t['kind'], t['name'], t['total_turns'], t['turns_passed'])
                     trackables.append(new_tracked)
-                return cls(last_session['turns'], last_session['time_passed'], last_session['rolls'], last_session['encounters'], trackables)
-
+                return cls(
+                    last_session['turns'], 
+                    last_session['time_passed'], 
+                    last_session['rolls'], 
+                    last_session['encounters'], 
+                    trackables, 
+                    saved_session
+                    )
+            
     def save_progress(self):
-        progress_data = {
+        turn_data = {
             "turns" : self.turns,
             "time_passed" : self.time_passed,
             "rolls" : list(self.rolls),
-            "encounters" : list(self.encounters)
+            "encounters" : list(self.encounters),
+            "tracked_objects" : []
             }
-        session_trackables = []
-        for to in self.tracked_objects:
-            if to.active:
-                thing = { 
-                    "kind" : to.kind, 
-                    "name" : to.name, 
-                    "turns_passed" : to.turns_passed, 
-                    "total_turns" : to.total_turns 
-                    }
-                session_trackables.append(thing)
-        progress_data["tracked_objects"] = session_trackables
+        for tracked in self.tracked_objects:
+            if tracked.active:
+                tracked_dict = tracked.return_dict()
+                turn_data["tracked_objects"].append(tracked_dict)
         # update self object
-        self.historical_data.append(progress_data)
-        # save to file
+        self.progress.append(turn_data)
+        # save to file as yaml
         with open("saves/saved.yaml", 'w') as file:
-            file.write(yaml.dump(self.historical_data))
+            file.write(yaml.dump(self.progress))
 
-    def load_progress(self):
-        ...
+    def quit_game(self):
+        q = input('Are you sure you want to quit? ')
+        if q.lower() in ['y', 'ye', 'yes', 'ya', 'yup']:
+            self.save_progress()
+            quit()
 
 # Terminal User Interface
 class UserInterface():
     def __init__(self):
         self.heading = "Old School Turn Tracker"
-        self.keys = {
-            'd' : '[d]ice roll',
-            't' : '[t]urn passed',
-            'n' : '[n]ew light source',
-            'e' : '[e]ncounter check',
-            's' : '[s]pell',
-            'q' : '[q]uit'
-        }
 
-    def main_screen(self,new_game):
+    def main_screen(self,session):
         self.clear()
         title_box = self.text_box(self.heading)
         print(title_box)
-        print(f"Time passed:  {new_game.time_passed}")
-        print(f"Current turn: {new_game.turns}")
-        print(f"\nSpent Torches: {new_game.spent_torches()}")
-        if new_game.tracked_objects:
-            for to in new_game.tracked_objects:
+        print(f"Time passed:  {session.time_passed}")
+        print(f"Current turn: {session.turns}")
+        print(f"\nSpent Torches: {session.spent_torches()}")
+        if session.tracked_objects:
+            for to in session.tracked_objects:
                 if to.kind != "spell":
                     to.print_meter()
         print(f"\nActive Spells:")
-        if new_game.tracked_objects:
-            for to in new_game.tracked_objects:
+        if session.tracked_objects:
+            for to in session.tracked_objects:
                 if to.kind == "spell":
                     to.print_meter()
-        print(f"\nEncounters: {new_game.encounters}")
-        print(f"\nRolls made: {new_game.rolls}")
-        if new_game.rolls:
-            print(f"Last roll: {new_game.rolls[-1]}")
+        print(f"\nEncounters: {session.encounters}")
+        print(f"\nRolls made: {session.rolls}")
+        if session.rolls:
+            print(f"Last roll: {session.rolls[-1]}")
         else:
             print()
-        print()
-        user_keys = ""
-        for s in self.keys.values():
-            user_keys = user_keys + s + "  "
-        print(user_keys)
+        print(f"Log:\n  {session.messages[-1]}\n")
 
-    def user_input(self):
-        key = input(f"Enter a key: ")
-        return key
+    def user_input(self, session):
+        user_keys = {
+            'd' : {'menu' : '[d]ice roll',        'function' : session.user_roll_dice   },
+            't' : {'menu' : '[t]urn passed',      'function' : session.update_time      },
+            'n' : {'menu' : '[n]ew light source', 'function' : session.new_light_source },
+            'e' : {'menu' : '[e]ncounter check',  'function' : session.encounter_check  },
+            's' : {'menu' : '[s]pell',            'function' : session.cast_spell       },
+            'u' : {'menu' : '[u]ndo last turn',   'function' : session.undo_turn        },
+            'q' : {'menu' : '[q]uit',             'function' : session.quit_game        }
+        }
+        # print keys the user can press to interact with the game
+        for k in user_keys:
+            print(f"{user_keys[k]['menu']}  ", end='')
+        print()
+        key = self.getch()
+        if key == 'r' and session.redo:
+            session.load_turn_dict(session.redo)
+            session.redo = {}
+        elif key in user_keys.keys():
+            user_keys[key]['function']()
+            session.save_progress()
+        else:
+            session.messages.append(f"The key {key} is not a valid key")
 
     def clear(self):
         clear = 'clear'
@@ -201,64 +264,40 @@ class UserInterface():
             clear = 'cls'
         os.system(clear)
 
+    # I got this from here, https://gist.github.com/jfktrey/8928865, but i need to test it on a windows machine
+    def getch(self):
+        if os.name == 'nt':
+            return msvcrt.getch()
+        else:
+            fd = sys.stdin.fileno()
+            old_settings = termios.tcgetattr(fd)
+            try:
+                tty.setraw(sys.stdin.fileno())
+                ch = sys.stdin.read(1)
+            finally:
+                termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+            return ch
+
     def text_box(self, text):
         w = '-' * len(text)
         line = '+-' + w + '-+'
         box = line + '\n' + '| ' + text + ' |\n' + line
         return box
 
+    def slow_print(*text, end='\n'):
+        for word in text:
+            for letter in word:
+                sys.stdout.write(letter)
+                sys.stdout.flush()
+                time.sleep(.015)
+        sys.stdout.write(end)
 
-def dice_roller(count,sides):
-    result = sum(random.randint(1,sides) for _ in range(count))
-    return(result)
-
+# main function to run the program
 def main():
     new_game = Session.start_session()
     ui = UserInterface()
     while True:
         ui.main_screen(new_game)
-        key = ui.user_input()
-        if key == 't':
-            new_game.turns += 1
-            new_game.update_time()
-        if key == 'd':
-            new_game.roll_dice()
-        if key == 'n':
-            kind = input("Are you lighting a [t]orch or a [l]antern? ")
-            if kind in ['t','l']:
-                if kind == 'l':
-                    kind = 'lantern'
-                if kind == 't':
-                    kind = 'torch'
-                light_source= Trackable(kind)
-                new_game.tracked_objects.append(light_source)
-        if key == 's':
-            spell_name = input("What spell has been cast? ")
-            turns = int(input("How many turns will it last? "))
-            spell = Trackable("spell",spell_name,turns)
-            new_game.tracked_objects.append(spell)
-        if key == 'e':
-            print("Encounter Tables:")
-            tables = list(encounter_table.keys())
-            for n,table in enumerate(encounter_table):
-                print(f"  {n+1}. {table}")
-            selection = int(input("Which table to roll on? ")) - 1
-            selected_table = tables[selection]
-            encounter = random.choice(encounter_table[selected_table])
-            monster = list(encounter.keys())[0]
-            dice = encounter[monster]
-            dice = dice_roller(int(dice.split('d')[0]), int(dice.split('d')[1]))
-            if dice > 1:
-                monster += 's'
-            new_game.encounters.append(f"{dice} {monster.title()}")
-        # SAVE
-        new_game.save_progress()
-        # quit
-        if key == 'q':
-            q = input('Are you sure you want to quit? ')
-            if q.lower() in ['y', 'ye', 'yes', 'ya', 'yup', 'yeah']:
-                quit()
-        if key == 'qy':
-                quit()
+        ui.user_input(new_game)
 
 main()
