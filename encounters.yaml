@@ -1,4 +1,4 @@
-level 1:
+Dungeon Level 1:
   - acolyte: 1d8
   - bandit: 1d8
   - fire beetle: 1d8
@@ -20,7 +20,7 @@ level 1:
   - trader: 1d8
   - wolf: 2d6
 
-level 2:
+Dungeon Level 2:
   - oil beetle: 1d8
   - berserker: 1d6
   - mountain lion: 1d4
