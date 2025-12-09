@@ -53,8 +53,8 @@ class Trackable():
 # umbrella to hold all the objects and time passed
 class Session():
     save_directory = "saves"
-    def __init__(self, turns=1, time_passed='0m', rolls=None, encounters=None, tracked_objects=None, progress=None, messages=None):
-        self.save_file = os.path.join(self.save_directory, "test.yml")
+    def __init__(self, save_file, turns=1, time_passed='0m', rolls=None, encounters=None, tracked_objects=None, progress=None, messages=None):
+        self.save_file = os.path.join(self.save_directory, save_file)
         self.turns = turns
         self.time_passed = time_passed
         # pythonic way to assign empty array if value is None
@@ -161,7 +161,8 @@ class Session():
         option = input("\nPress [n] to start a new session, or [l] to load a save file: ")
         if option in ['n', 'l']:
             if option == 'n':
-                return cls(0,"0m")
+                sf = input("What should we name this save file?" ) + '.yml'
+                return cls(sf, 0,"0m")
             if option == 'l':
                 save_select = int(input("Which save file? Enter a number: ")) - 1
                 save_file = os.listdir(Session.save_directory)[save_select]
@@ -173,7 +174,7 @@ class Session():
                 for t in last_sess['tracked_objects']:
                     new_tracked = Trackable(t['kind'], t['name'], t['total_turns'], t['turns_passed'])
                     trackables.append(new_tracked)
-                return cls(last_sess['turns'], last_sess['time_passed'], last_sess['rolls'], last_sess['encounters'], trackables, saved_session)
+                return cls(save_file, last_sess['turns'], last_sess['time_passed'], last_sess['rolls'], last_sess['encounters'], trackables, saved_session)
             
     def save_progress(self):
         turn_data = {

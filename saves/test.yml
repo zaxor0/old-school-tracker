@@ -1,20 +1,111 @@
 - encounters: []
-  rolls:
-  - 14
+  rolls: []
   time_passed: 0m
   tracked_objects: []
-  turns: 0
+  turns: 1
 - encounters: []
-  rolls:
-  - 14
-  - 11
-  time_passed: 0m
+  rolls: []
+  time_passed: 10m
   tracked_objects: []
-  turns: 0
+  turns: 2
 - encounters: []
-  rolls:
-  - 14
-  - 11
-  time_passed: 0m
+  rolls: []
+  time_passed: 20m
   tracked_objects: []
-  turns: 0
+  turns: 3
+- encounters: []
+  rolls: []
+  time_passed: 30m
+  tracked_objects: []
+  turns: 4
+- encounters: []
+  rolls: []
+  time_passed: 30m
+  tracked_objects:
+  - kind: spell
+    name: light
+    total_turns: 3
+    turns_passed: -1
+  turns: 4
+- encounters: []
+  rolls: []
+  time_passed: 30m
+  tracked_objects:
+  - kind: spell
+    name: light
+    total_turns: 3
+    turns_passed: -1
+  - kind: lantern
+    name: null
+    total_turns: 24
+    turns_passed: -1
+  turns: 4
+- encounters: []
+  rolls: []
+  time_passed: 40m
+  tracked_objects:
+  - kind: spell
+    name: light
+    total_turns: 3
+    turns_passed: 0
+  - kind: lantern
+    name: null
+    total_turns: 24
+    turns_passed: 0
+  turns: 5
+- encounters: []
+  rolls: []
+  time_passed: 50m
+  tracked_objects:
+  - kind: spell
+    name: light
+    total_turns: 3
+    turns_passed: 1
+  - kind: lantern
+    name: null
+    total_turns: 24
+    turns_passed: 1
+  turns: 6
+- encounters: []
+  rolls: []
+  time_passed: 50m
+  tracked_objects:
+  - kind: spell
+    name: light
+    total_turns: 3
+    turns_passed: 1
+  - kind: lantern
+    name: null
+    total_turns: 24
+    turns_passed: 1
+  turns: 6
+- encounters:
+  - 3 Fire Beetles
+  rolls:
+  - 16
+  time_passed: 50m
+  tracked_objects:
+  - kind: spell
+    name: light
+    total_turns: 3
+    turns_passed: 1
+  - kind: lantern
+    name: null
+    total_turns: 24
+    turns_passed: 1
+  turns: 6
+- encounters:
+  - 3 Fire Beetles
+  rolls:
+  - 16
+  time_passed: 50m
+  tracked_objects:
+  - kind: spell
+    name: light
+    total_turns: 3
+    turns_passed: 1
+  - kind: lantern
+    name: null
+    total_turns: 24
+    turns_passed: 1
+  turns: 6
