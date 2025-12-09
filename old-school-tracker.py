@@ -151,30 +151,35 @@ class Session():
 
     @classmethod
     def start_session(cls):
-        print("Welcome to the Old School Tracker\n") 
-        print("Available save files:")
-        if os.listdir(Session.save_directory): 
-            for num, sf in enumerate(os.listdir(Session.save_directory)): 
-               print(f"  {num+1}. {sf}")
-        else:
-            print("...")
-        option = input("\nPress [n] to start a new session, or [l] to load a save file: ")
-        if option in ['n', 'l']:
+        while True:
+            UserInterface.clear()
+            print("Welcome to the Old School Tracker\n") 
+            print("Available save files:")
+            save_file_options =[]
+            if os.listdir(Session.save_directory): 
+                for num, sf in enumerate(os.listdir(Session.save_directory)): 
+                    save_file_options.append(num)
+                    print(f"  {num+1}. {sf}")
+            else:
+                print("...")
+            option = input("\nPress [n] to start a new session, or [l] to load a save file: ")
             if option == 'n':
-                sf = input("What should we name this save file?" ) + '.yml'
+                sf = input("Starting a new session!\nWhat should we name this save file?" ) + '.yml'
                 return cls(sf, 0,"0m")
             if option == 'l':
-                save_select = int(input("Which save file? Enter a number: ")) - 1
-                save_file = os.listdir(Session.save_directory)[save_select]
-                save_file = os.path.join(Session.save_directory, save_file)
-                with open(save_file, 'r') as file:
+                save_num = int(input("Which save file number? ")) - 1
+                save_file_name = os.listdir(Session.save_directory)[save_num]
+                save_file_to_load = os.path.join(Session.save_directory, save_file_name)
+                with open(save_file_to_load, 'r') as file:
                     saved_session = yaml.safe_load(file)
                 last_sess = saved_session[-1]
                 trackables = []
                 for t in last_sess['tracked_objects']:
                     new_tracked = Trackable(t['kind'], t['name'], t['total_turns'], t['turns_passed'])
                     trackables.append(new_tracked)
-                return cls(save_file, last_sess['turns'], last_sess['time_passed'], last_sess['rolls'], last_sess['encounters'], trackables, saved_session)
+                return cls(save_file_name, last_sess['turns'], last_sess['time_passed'], last_sess['rolls'], last_sess['encounters'], trackables, saved_session)
+            else:
+                input("Not an option, press any key")
             
     def save_progress(self):
         turn_data = {
@@ -232,7 +237,7 @@ class UserInterface():
             'n' : {'menu' : '[n]ew light source', 'function' : session.new_light_source },
             'e' : {'menu' : '[e]ncounter check',  'function' : session.encounter_check  },
             's' : {'menu' : '[s]pell',            'function' : session.cast_spell       },
-            'u' : {'menu' : '[u]ndo last turn',   'function' : session.undo_turn        },
+            'u' : {'menu' : '[u]ndo last action',   'function' : session.undo_turn        },
             'q' : {'menu' : '[q]uit',             'function' : session.quit_game        }
         }
         # print keys the user can press to interact with the game
@@ -249,6 +254,7 @@ class UserInterface():
         else:
             session.messages.append(f"The key {key} is not a valid key")
 
+    @classmethod
     def clear(self):
         clear = 'clear'
         if os.name == 'nt':
