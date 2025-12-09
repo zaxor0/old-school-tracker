@@ -164,7 +164,7 @@ class Session():
                 print("...")
             option = input("\nPress [n] to start a new session, or [l] to load a save file: ")
             if option == 'n':
-                sf = input("Starting a new session!\nWhat should we name this save file?" ) + '.yml'
+                sf = input("Starting a new session!\nWhat should we name this save file? " ) + '.yml'
                 return cls(sf, 0,"0m")
             if option == 'l':
                 save_num = int(input("Which save file number? ")) - 1
@@ -264,7 +264,7 @@ class UserInterface():
     # I got this function from https://gist.github.com/jfktrey/8928865, but I need to test it on a windows machine
     def getch(self):
         if os.name == 'nt':
-            return msvcrt.getch()
+            return bytes.decode(msvcrt.getch())
         else:
             fd = sys.stdin.fileno()
             old_settings = termios.tcgetattr(fd)
