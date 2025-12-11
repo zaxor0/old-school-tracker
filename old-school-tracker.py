@@ -261,7 +261,8 @@ class UserInterface():
             clear = 'cls'
         os.system(clear)
 
-    # I got this function from https://gist.github.com/jfktrey/8928865, but I need to test it on a windows machine
+    # I got this function from https://gist.github.com/jfktrey/8928865 a few years ago
+    # works on windows, had to return the value as dedcode by bytes.decode()
     def getch(self):
         if os.name == 'nt':
             return bytes.decode(msvcrt.getch())
@@ -289,4 +290,5 @@ def main():
         ui.main_screen(new_game)
         ui.user_input(new_game)
 
-main()
+if __name__ == "__main__":
+    main()

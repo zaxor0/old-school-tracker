@@ -214,3 +214,51 @@
     total_turns: 10
     turns_passed: 8
   turns: 14
+- encounters:
+  - 2 Troglodytes
+  rolls:
+  - 8
+  time_passed: 2h 10m
+  tracked_objects:
+  - kind: spell
+    name: sleep
+    total_turns: 10
+    turns_passed: 8
+  - kind: torch
+    name: null
+    total_turns: 6
+    turns_passed: -1
+  turns: 14
+- encounters:
+  - 2 Troglodytes
+  rolls:
+  - 8
+  time_passed: 2h 20m
+  tracked_objects:
+  - kind: torch
+    name: null
+    total_turns: 6
+    turns_passed: 0
+  turns: 15
+- encounters:
+  - 2 Troglodytes
+  rolls:
+  - 8
+  time_passed: 2h 30m
+  tracked_objects:
+  - kind: torch
+    name: null
+    total_turns: 6
+    turns_passed: 1
+  turns: 16
+- encounters:
+  - 2 Troglodytes
+  rolls:
+  - 8
+  time_passed: 2h 30m
+  tracked_objects:
+  - kind: torch
+    name: null
+    total_turns: 6
+    turns_passed: 1
+  turns: 16
