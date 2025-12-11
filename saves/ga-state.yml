@@ -1,0 +1,345 @@
+- encounters:
+  - 2 Orcs
+  rolls: []
+  time_passed: 0m
+  tracked_objects: []
+  turns: 0
+- encounters:
+  - 2 Orcs
+  rolls: []
+  time_passed: 0m
+  tracked_objects: []
+  turns: 1
+- encounters:
+  - 2 Orcs
+  rolls: []
+  time_passed: 10m
+  tracked_objects: []
+  turns: 2
+- encounters:
+  - 2 Orcs
+  rolls: []
+  time_passed: 20m
+  tracked_objects: []
+  turns: 3
+- encounters:
+  - 2 Orcs
+  rolls: []
+  time_passed: 30m
+  tracked_objects: []
+  turns: 4
+- encounters:
+  - 2 Orcs
+  rolls: []
+  time_passed: 40m
+  tracked_objects: []
+  turns: 5
+- encounters:
+  - 2 Orcs
+  rolls: []
+  time_passed: 50m
+  tracked_objects: []
+  turns: 6
+- encounters:
+  - 2 Orcs
+  rolls: []
+  time_passed: 1h 0m
+  tracked_objects: []
+  turns: 7
+- encounters:
+  - 2 Orcs
+  rolls: []
+  time_passed: 1h 10m
+  tracked_objects: []
+  turns: 8
+- encounters:
+  - 2 Orcs
+  rolls: []
+  time_passed: 1h 20m
+  tracked_objects: []
+  turns: 9
+- encounters:
+  - 2 Orcs
+  rolls: []
+  time_passed: 1h 30m
+  tracked_objects: []
+  turns: 10
+- encounters:
+  - 2 Orcs
+  rolls: []
+  time_passed: 1h 30m
+  tracked_objects:
+  - kind: spell
+    name: sleep
+    total_turns: 10
+    turns_passed: -1
+  turns: 10
+- encounters:
+  - 2 Orcs
+  rolls: []
+  time_passed: 1h 40m
+  tracked_objects:
+  - kind: spell
+    name: sleep
+    total_turns: 10
+    turns_passed: 0
+  turns: 11
+- encounters:
+  - 2 Orcs
+  rolls: []
+  time_passed: 1h 50m
+  tracked_objects:
+  - kind: spell
+    name: sleep
+    total_turns: 10
+    turns_passed: 1
+  turns: 12
+- encounters:
+  - 2 Orcs
+  rolls: []
+  time_passed: 1h 50m
+  tracked_objects:
+  - kind: spell
+    name: sleep
+    total_turns: 10
+    turns_passed: 1
+  - kind: torch
+    name: null
+    total_turns: 6
+    turns_passed: -1
+  turns: 12
+- encounters:
+  - 2 Orcs
+  rolls: []
+  time_passed: 2h 0m
+  tracked_objects:
+  - kind: spell
+    name: sleep
+    total_turns: 10
+    turns_passed: 2
+  - kind: torch
+    name: null
+    total_turns: 6
+    turns_passed: 0
+  turns: 13
+- encounters:
+  - 2 Orcs
+  rolls: []
+  time_passed: 2h 10m
+  tracked_objects:
+  - kind: spell
+    name: sleep
+    total_turns: 10
+    turns_passed: 3
+  - kind: torch
+    name: null
+    total_turns: 6
+    turns_passed: 1
+  turns: 14
+- encounters:
+  - 2 Orcs
+  rolls: []
+  time_passed: 2h 20m
+  tracked_objects:
+  - kind: spell
+    name: sleep
+    total_turns: 10
+    turns_passed: 4
+  - kind: torch
+    name: null
+    total_turns: 6
+    turns_passed: 2
+  turns: 15
+- encounters:
+  - 2 Orcs
+  rolls:
+  - 87
+  time_passed: 2h 20m
+  tracked_objects:
+  - kind: spell
+    name: sleep
+    total_turns: 10
+    turns_passed: 4
+  - kind: torch
+    name: null
+    total_turns: 6
+    turns_passed: 2
+  turns: 15
+- encounters:
+  - 2 Orcs
+  rolls:
+  - 87
+  time_passed: 2h 30m
+  tracked_objects:
+  - kind: spell
+    name: sleep
+    total_turns: 10
+    turns_passed: 5
+  - kind: torch
+    name: null
+    total_turns: 6
+    turns_passed: 3
+  turns: 16
+- encounters:
+  - 2 Orcs
+  rolls:
+  - 87
+  time_passed: 2h 40m
+  tracked_objects:
+  - kind: spell
+    name: sleep
+    total_turns: 10
+    turns_passed: 6
+  - kind: torch
+    name: null
+    total_turns: 6
+    turns_passed: 4
+  turns: 17
+- encounters:
+  - 2 Orcs
+  rolls:
+  - 87
+  time_passed: 2h 40m
+  tracked_objects:
+  - kind: spell
+    name: sleep
+    total_turns: 10
+    turns_passed: 6
+  - kind: torch
+    name: null
+    total_turns: 6
+    turns_passed: 4
+  - kind: lantern
+    name: null
+    total_turns: 24
+    turns_passed: -1
+  turns: 17
+- encounters:
+  - 2 Orcs
+  rolls:
+  - 87
+  time_passed: 2h 50m
+  tracked_objects:
+  - kind: spell
+    name: sleep
+    total_turns: 10
+    turns_passed: 7
+  - kind: lantern
+    name: null
+    total_turns: 24
+    turns_passed: 0
+  turns: 18
+- encounters:
+  - 2 Orcs
+  rolls:
+  - 87
+  time_passed: 3h 0m
+  tracked_objects:
+  - kind: spell
+    name: sleep
+    total_turns: 10
+    turns_passed: 8
+  - kind: lantern
+    name: null
+    total_turns: 24
+    turns_passed: 1
+  turns: 19
+- encounters:
+  - 2 Orcs
+  rolls:
+  - 87
+  time_passed: 3h 10m
+  tracked_objects:
+  - kind: lantern
+    name: null
+    total_turns: 24
+    turns_passed: 2
+  turns: 20
+- encounters:
+  - 2 Orcs
+  rolls:
+  - 87
+  time_passed: 3h 20m
+  tracked_objects:
+  - kind: lantern
+    name: null
+    total_turns: 24
+    turns_passed: 3
+  turns: 21
+- encounters:
+  - 2 Orcs
+  rolls:
+  - 87
+  time_passed: 3h 30m
+  tracked_objects:
+  - kind: lantern
+    name: null
+    total_turns: 24
+    turns_passed: 4
+  turns: 22
+- encounters:
+  - 2 Orcs
+  rolls:
+  - 87
+  time_passed: 3h 40m
+  tracked_objects:
+  - kind: lantern
+    name: null
+    total_turns: 24
+    turns_passed: 5
+  turns: 23
+- encounters:
+  - 2 Orcs
+  rolls:
+  - 87
+  time_passed: 3h 50m
+  tracked_objects:
+  - kind: lantern
+    name: null
+    total_turns: 24
+    turns_passed: 6
+  turns: 24
+- encounters:
+  - 2 Orcs
+  rolls:
+  - 87
+  time_passed: 4h 0m
+  tracked_objects:
+  - kind: lantern
+    name: null
+    total_turns: 24
+    turns_passed: 7
+  turns: 25
+- encounters:
+  - 2 Orcs
+  rolls:
+  - 87
+  time_passed: 4h 10m
+  tracked_objects:
+  - kind: lantern
+    name: null
+    total_turns: 24
+    turns_passed: 8
+  turns: 26
+- encounters:
+  - 2 Orcs
+  rolls:
+  - 87
+  time_passed: 4h 20m
+  tracked_objects:
+  - kind: lantern
+    name: null
+    total_turns: 24
+    turns_passed: 9
+  turns: 27
+- encounters:
+  - 2 Orcs
+  rolls:
+  - 87
+  time_passed: 4h 20m
+  tracked_objects:
+  - kind: lantern
+    name: null
+    total_turns: 24
+    turns_passed: 9
+  turns: 27

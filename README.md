@@ -34,3 +34,10 @@ On OSes where the system does not manage python packages:
 - You need an `encounters.yaml` file, one is provided based on the first two level of "Keep on the Borderlands" this must be in the same directory.
 - You need a `saves/` directory to save your sessions to.
 - The program wont take any arguments, simply run with like `python3 old-school-tracker.py`
+
+
+## Some reference for the general concept
+- [the old school essentials rules](https://oldschoolessentials.necroticgnome.com/srd/index.php/Time,_Weight,_Movement#Measurements)
+- [The Alexandrian blog post on his tool set](https://thealexandrian.net/wordpress/50313/roleplaying-games/dungeon-running-sheets)
+- [a reddit post about the probelm](https://www.reddit.com/r/osr/comments/tfu9kt/ose_how_to_keep_track_of_time_in_a_dungeon/)
+
