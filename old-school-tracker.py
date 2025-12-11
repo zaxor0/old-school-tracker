@@ -9,7 +9,7 @@ else:
     import tty, termios, sys
 
 # load encounter tables file
-with open('encounters.yaml','r') as f:
+with open('encounters.yml','r') as f:
     encounter_table = yaml.safe_load(f)
 
 # torches, spells, so on
